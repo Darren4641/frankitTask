@@ -20,8 +20,10 @@ import shop.frankit.common.security.dto.UserPrincipal;
 import shop.frankit.common.security.service.AuthTokenProvider;
 import shop.frankit.domain.user.dto.auth.service.*;
 import shop.frankit.domain.user.entity.User;
+import shop.frankit.domain.user.entity.UserRole;
 import shop.frankit.domain.user.repository.UserRepository;
 
+import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 
@@ -50,7 +52,7 @@ class AuthServiceImplTest {
         SignupSvcReqDto signupRequest = new SignupSvcReqDto("test@example.com", "password", Set.of(RoleType.USER));
         User userEntity = signupRequest.toEntity();
 
-        given(userRepository.findByEmail(signupRequest.getEmail())).willReturn(Optional.empty());
+        given(userRepository.findByEmailDsl(signupRequest.getEmail())).willReturn(Optional.empty());
         given(userRepository.save(any(User.class))).willReturn(userEntity);
 
         // when
@@ -60,7 +62,7 @@ class AuthServiceImplTest {
         assertThat(response).isNotNull();
         assertThat(response.getEmail()).isEqualTo(signupRequest.getEmail());
 
-        verify(userRepository).findByEmail(signupRequest.getEmail());
+        verify(userRepository).findByEmailDsl(signupRequest.getEmail());
         verify(userRepository).save(any(User.class));
     }
 
@@ -69,14 +71,14 @@ class AuthServiceImplTest {
     void saveUser_ThrowsException_WhenEmailAlreadyExists() {
         // given
         SignupSvcReqDto signupRequest = new SignupSvcReqDto("test@example.com", "password", Set.of(RoleType.USER));
-        given(userRepository.findByEmail(signupRequest.getEmail())).willReturn(Optional.ofNullable(signupRequest.toEntity()));
+        given(userRepository.findByEmailDsl(signupRequest.getEmail())).willReturn(Optional.ofNullable(signupRequest.toEntity()));
 
         // when & then
         assertThatThrownBy(() -> authService.saveUser(signupRequest))
                 .isInstanceOf(ApiErrorException.class)
                 .hasMessageContaining(ResultCode.ALREADY_SIGNUP.getMessage());
 
-        verify(userRepository).findByEmail(signupRequest.getEmail());
+        verify(userRepository).findByEmailDsl(signupRequest.getEmail());
         verify(userRepository, never()).save(any(User.class));
     }
 
@@ -86,8 +88,10 @@ class AuthServiceImplTest {
         // given
         SigninSvcReqDto signinRequest = new SigninSvcReqDto("test@example.com", "password");
         Authentication authentication = mock(Authentication.class);
+        User userMock = new User("test@example.com", "password", new HashSet<>());
+        userMock.addRole(Set.of(new UserRole(userMock, RoleType.USER)));
 
-        UserPrincipal mockUserPrincipal = new UserPrincipal(new User("test@example.com", "password", Set.of(RoleType.USER)));
+        UserPrincipal mockUserPrincipal = new UserPrincipal(userMock);
 
 
         given(authenticationManager.authenticate(any(UsernamePasswordAuthenticationToken.class)))
@@ -133,7 +137,10 @@ class AuthServiceImplTest {
         // given
         Authentication authentication = mock(Authentication.class);
         SecurityContext securityContext = mock(SecurityContext.class);
-        UserPrincipal mockUserPrincipal = new UserPrincipal(new User("test@example.com", "password", Set.of(RoleType.USER)));
+        User userMock = new User("test@example.com", "password", new HashSet<>());
+        userMock.addRole(Set.of(new UserRole(userMock, RoleType.USER)));
+
+        UserPrincipal mockUserPrincipal = new UserPrincipal(userMock);
 
         given(securityContext.getAuthentication()).willReturn(authentication);
         given(authentication.getPrincipal()).willReturn((UserPrincipal) mockUserPrincipal);

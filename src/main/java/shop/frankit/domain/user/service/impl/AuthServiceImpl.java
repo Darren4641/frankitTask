@@ -29,7 +29,7 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public SignupSvcResDto saveUser(SignupSvcReqDto signupSvcReqDto) {
-        userRepository.findByEmail(signupSvcReqDto.getEmail())
+        userRepository.findByEmailDsl(signupSvcReqDto.getEmail())
                 .ifPresent(savedUser -> {throw new ApiErrorException(ResultCode.ALREADY_SIGNUP); });
 
         User userEntity = userRepository.save(signupSvcReqDto.toEntity());
@@ -62,6 +62,7 @@ public class AuthServiceImpl implements AuthService {
                     new UsernamePasswordAuthenticationToken(email, password)
             );
         } catch (Exception e) {
+            e.printStackTrace();
             throw new ApiErrorException(ResultCode.USER_NOT_FOUND);
         }
     }

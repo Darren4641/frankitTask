@@ -1,6 +1,5 @@
 package shop.frankit.domain.user.controller;
 
-import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -31,11 +30,7 @@ public class AuthController {
     public BaseResponse<SignupResDto> signup(@RequestBody @Valid SignupReqDto requestDto) {
         Set<RoleType> roles = new HashSet<>(Set.of(RoleType.USER));
 
-        SignupSvcReqDto serviceRequest = new SignupSvcReqDto(
-                requestDto.getEmail(),
-                passwordEncoder.encode(requestDto.getPassword()),
-                roles
-        );
+        SignupSvcReqDto serviceRequest = requestDto.toServiceDto(passwordEncoder.encode(requestDto.getPassword()), roles);
 
         SignupSvcResDto serviceResponse = authService.saveUser(serviceRequest);
 
@@ -44,20 +39,11 @@ public class AuthController {
 
     @PostMapping("/signin")
     public BaseResponse<SigninResDto> signin(@RequestBody @Valid SigninReqDto requestDto) {
-        SigninSvcReqDto serviceRequest = new SigninSvcReqDto(
-                requestDto.getEmail(),
-                requestDto.getPassword()
-        );
+        SigninSvcReqDto serviceRequest = requestDto.toServiceDto();
 
         SigninSvcResDto serviceResponse = authService.validateCredentials(serviceRequest);
 
         return new BaseResponse<>(SigninResDto.from(serviceResponse));
-    }
-
-    @GetMapping("/profile")
-    @SecurityRequirement(name = "bearerAuth")
-    public BaseResponse<?> profile() {
-        return new BaseResponse<>(authService.authenticate());
     }
 
 }

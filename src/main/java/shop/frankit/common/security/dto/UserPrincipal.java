@@ -4,6 +4,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import shop.frankit.domain.user.entity.User;
+import shop.frankit.domain.user.entity.UserRole;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -16,7 +17,9 @@ public class UserPrincipal implements UserDetails {
     public UserPrincipal(User user) {
         this.email = user.getEmail();
         this.password = user.getPassword();
-        this.roles = user.getRoles();
+        this.roles = user.getRoles().stream()
+                .map(UserRole::getRole)
+                .collect(Collectors.toSet());
     }
 
     public UserPrincipal(User user, Map<String, Object> attributes) {

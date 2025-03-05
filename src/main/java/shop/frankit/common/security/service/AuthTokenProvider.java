@@ -12,6 +12,7 @@ import shop.frankit.common.properties.AppProperties;
 import shop.frankit.common.security.dto.RoleType;
 import shop.frankit.common.security.dto.UserPrincipal;
 import shop.frankit.domain.user.entity.User;
+import shop.frankit.domain.user.entity.UserRole;
 
 import javax.crypto.SecretKey;
 import java.nio.charset.StandardCharsets;
@@ -62,21 +63,20 @@ public class AuthTokenProvider {
     public Authentication getAuthentication(String token) {
         Claims claims = getTokenClaims(token);
 
+        User user = new User(claims.getSubject(), new HashSet<>());
+
         // 역할(role) 변환
         List<String> roleStrings = claims.get(AUTHORITIES_KEY, List.class);
-        Set<RoleType> roles = roleStrings.stream()
-                .map(RoleType::valueOf)
+        Set<UserRole> userRoles = roleStrings.stream()
+                .map(role -> new UserRole(user, RoleType.valueOf(role)))
                 .collect(Collectors.toSet());
 
         // Spring Security의 GrantedAuthority 생성
-        List<GrantedAuthority> authorities = roles.stream()
-                .map(role -> new SimpleGrantedAuthority(role.name()))
+        List<GrantedAuthority> authorities = userRoles.stream()
+                .map(role -> new SimpleGrantedAuthority(role.getRole().name()))
                 .collect(Collectors.toList());
 
-        UserPrincipal principal = new UserPrincipal(new User(
-                claims.getSubject(),
-                roles
-        ));
+        UserPrincipal principal = new UserPrincipal(user);
 
         return new UsernamePasswordAuthenticationToken(principal, token, authorities);
     }

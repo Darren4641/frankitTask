@@ -5,6 +5,7 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import shop.frankit.domain.user.dto.auth.service.SigninSvcReqDto;
 
 @Getter
 @NoArgsConstructor
@@ -16,4 +17,11 @@ public class SigninReqDto {
 
     @NotBlank
     private String password;
+
+    public SigninSvcReqDto toServiceDto() {
+        return new SigninSvcReqDto(
+                email,
+                password
+        );
+    }
 }

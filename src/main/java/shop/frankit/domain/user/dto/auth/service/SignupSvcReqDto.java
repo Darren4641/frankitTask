@@ -5,8 +5,11 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import shop.frankit.common.security.dto.RoleType;
 import shop.frankit.domain.user.entity.User;
+import shop.frankit.domain.user.entity.UserRole;
 
+import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Getter
 @NoArgsConstructor
@@ -18,6 +21,13 @@ public class SignupSvcReqDto {
 
 
     public User toEntity() {
-        return new User(email, encPassword, roles);
+        User newUser = new User(email, encPassword, new HashSet<>());
+
+        Set<UserRole> userRoles = roles.stream()
+                .map(role -> new UserRole(newUser, role))
+                .collect(Collectors.toSet());
+
+        newUser.addRole(userRoles);
+        return newUser;
     }
 }

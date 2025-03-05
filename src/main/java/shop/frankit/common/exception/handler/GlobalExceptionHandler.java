@@ -96,6 +96,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ExceptionMsg> handleException(Exception ex) {
+        ex.printStackTrace();
         return GENERIC_ERROR;
     }
 }

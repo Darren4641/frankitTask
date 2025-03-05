@@ -10,7 +10,7 @@ async function loadProfile() {
     }
 
     try {
-        const response = await fetch("/auth/v1/profile", {
+        const response = await fetch("/user/v1/profile", {
             method: "GET",
             headers: {
                 "Authorization": "Bearer " + token,

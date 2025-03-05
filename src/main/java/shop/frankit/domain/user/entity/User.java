@@ -9,7 +9,12 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 import shop.frankit.common.security.dto.RoleType;
+import shop.frankit.domain.common.BaseEntity;
+import shop.frankit.domain.product.entity.Product;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Getter
@@ -19,7 +24,7 @@ import java.util.Set;
 @DynamicInsert
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class User {
+public class User extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -32,18 +37,19 @@ public class User {
     @Column(nullable = false)
     private String password;
 
-    @ElementCollection(fetch = FetchType.LAZY) // 다중 역할(Role) 지원
-    @Enumerated(EnumType.STRING)
-    @CollectionTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"))
-    @Column(name = "role", nullable = false)
-    private Set<RoleType> roles;
+    // ✅ `@OneToMany`로 변경
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private Set<UserRole> roles = new HashSet<>();
 
-    public User(String email, Set<RoleType> roles) {
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<Product> products = new ArrayList<>();
+
+    public User(String email, Set<UserRole> roles) {
         this.email = email;
         this.roles = roles;
     }
 
-    public User(String email, String password, Set<RoleType> roles) {
+    public User(String email, String password, Set<UserRole> roles) {
         this.email = email;
         this.password = password;
         this.roles = roles;
@@ -51,6 +57,14 @@ public class User {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public void addRole(Set<UserRole> roles) {
+        this.roles = roles;
+    }
+
+    public void addProduct(List<Product> products) {
+        this.products = products;
     }
 
 }
