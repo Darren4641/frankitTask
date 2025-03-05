@@ -41,6 +41,12 @@ public class ProductOption extends BaseEntity {
     @OneToMany(mappedBy = "productOption", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ProductOptionValue> optionValues = new ArrayList<>();
 
+    public ProductOption(String optionName, OptionType optionType, Double extraPrice) {
+        this.optionName = optionName;
+        this.optionType = optionType;
+        this.extraPrice = extraPrice;
+    }
+
     protected void setProduct(Product product) {
         this.product = product;
     }

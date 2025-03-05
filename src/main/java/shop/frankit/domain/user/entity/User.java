@@ -8,7 +8,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
-import shop.frankit.common.security.dto.RoleType;
 import shop.frankit.domain.common.BaseEntity;
 import shop.frankit.domain.product.entity.Product;
 
@@ -44,6 +43,11 @@ public class User extends BaseEntity {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<Product> products = new ArrayList<>();
 
+    public User(Long id, String email) {
+        this.id = id;
+        this.email = email;
+    }
+
     public User(String email, Set<UserRole> roles) {
         this.email = email;
         this.roles = roles;
@@ -59,12 +63,18 @@ public class User extends BaseEntity {
         this.id = id;
     }
 
-    public void addRole(Set<UserRole> roles) {
+    public void setRole(Set<UserRole> roles) {
         this.roles = roles;
     }
 
-    public void addProduct(List<Product> products) {
-        this.products = products;
+    public void addRole(UserRole role) {
+        role.setUser(this);
+        this.roles.add(role);
+    }
+
+    public void addProduct(Product product) {
+        product.setUser(this);
+        this.products.add(product);
     }
 
 }

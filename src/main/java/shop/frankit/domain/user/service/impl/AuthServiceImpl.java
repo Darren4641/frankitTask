@@ -8,8 +8,9 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import shop.frankit.common.exception.ApiErrorException;
 import shop.frankit.common.response.ResultCode;
+import shop.frankit.common.security.dto.UserPrincipal;
 import shop.frankit.common.security.service.AuthTokenProvider;
-import shop.frankit.domain.user.dto.auth.service.AuthenticateDto;
+import shop.frankit.domain.user.dto.auth.service.ProfileDto;
 import shop.frankit.domain.user.dto.auth.service.SigninSvcReqDto;
 import shop.frankit.domain.user.dto.auth.service.SigninSvcResDto;
 import shop.frankit.domain.user.dto.auth.service.SignupSvcReqDto;
@@ -40,20 +41,38 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public SigninSvcResDto validateCredentials(SigninSvcReqDto signinSvcReqDto) {
         var authentication = authenticateUser(signinSvcReqDto.getEmail(), signinSvcReqDto.getPassword());
+        UserPrincipal principal = (UserPrincipal) authentication.getPrincipal();
 
-        AuthenticateDto authenticateDto = AuthenticateDto.fromAuthentication(authentication);
+        User userEntity = userRepository.findByEmailDsl(principal.getUsername())
+                .orElseThrow(() -> new ApiErrorException(ResultCode.ALREADY_SIGNUP));
+
+        ProfileDto profileDto = ProfileDto.fromEntity(userEntity);
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
-        var token = tokenProvider.createToken(authenticateDto.getEmail(), authenticateDto.getRoles());
+        var token = tokenProvider.createToken(profileDto.getEmail(), profileDto.getRoles());
 
-        return SigninSvcResDto.from(authenticateDto.getEmail(), authenticateDto.getRoles(), token);
+        return SigninSvcResDto.from(profileDto.getEmail(), profileDto.getRoles(), token);
     }
 
     @Override
-    public AuthenticateDto authenticate() {
+    public ProfileDto getUserProfile() {
         var authentication = SecurityContextHolder.getContext().getAuthentication();
-        return AuthenticateDto.fromAuthentication(authentication);
+        UserPrincipal principal = (UserPrincipal) authentication.getPrincipal();
+
+        User userEntity = userRepository.findByEmailDsl(principal.getUsername())
+                .orElseThrow(() -> new ApiErrorException(ResultCode.ALREADY_SIGNUP));
+
+        return ProfileDto.fromEntity(userEntity);
+    }
+
+    @Override
+    public User authenticate() {
+        var authentication = SecurityContextHolder.getContext().getAuthentication();
+        UserPrincipal principal = (UserPrincipal) authentication.getPrincipal();
+
+        return userRepository.findByEmailDsl(principal.getUsername())
+                .orElseThrow(() -> new ApiErrorException(ResultCode.ALREADY_SIGNUP));
     }
 
     private Authentication authenticateUser(String email, String password) {

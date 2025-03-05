@@ -12,7 +12,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import shop.frankit.common.exception.ApiErrorException;
 import shop.frankit.common.response.ResultCode;
 import shop.frankit.common.security.dto.RoleType;
@@ -89,7 +88,7 @@ class AuthServiceImplTest {
         SigninSvcReqDto signinRequest = new SigninSvcReqDto("test@example.com", "password");
         Authentication authentication = mock(Authentication.class);
         User userMock = new User("test@example.com", "password", new HashSet<>());
-        userMock.addRole(Set.of(new UserRole(userMock, RoleType.USER)));
+        userMock.setRole(Set.of(new UserRole(userMock, RoleType.USER)));
 
         UserPrincipal mockUserPrincipal = new UserPrincipal(userMock);
 
@@ -138,7 +137,7 @@ class AuthServiceImplTest {
         Authentication authentication = mock(Authentication.class);
         SecurityContext securityContext = mock(SecurityContext.class);
         User userMock = new User("test@example.com", "password", new HashSet<>());
-        userMock.addRole(Set.of(new UserRole(userMock, RoleType.USER)));
+        userMock.setRole(Set.of(new UserRole(userMock, RoleType.USER)));
 
         UserPrincipal mockUserPrincipal = new UserPrincipal(userMock);
 
@@ -147,7 +146,7 @@ class AuthServiceImplTest {
         SecurityContextHolder.setContext(securityContext);
 
         // when
-        AuthenticateDto response = authService.authenticate();
+        ProfileDto response = authService.getUserProfile();
 
         // then
         assertThat(response).isNotNull();

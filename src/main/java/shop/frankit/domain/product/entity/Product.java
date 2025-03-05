@@ -38,6 +38,24 @@ public class Product extends BaseEntity {
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<ProductOption> options = new ArrayList<>();
 
+    public Product(Long id, String name, String description, Double price, Double deliveryFee) {
+        this.id = id;
+        this.name = name;
+        this.description = description;
+        this.price = price;
+        this.deliveryFee = deliveryFee;
+    }
+
+    public Product(String name, String description, Double price, Double deliveryFee) {
+        this.name = name;
+        this.description = description;
+        this.price = price;
+        this.deliveryFee = deliveryFee;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
     public void addOption(ProductOption option) {
         option.setProduct(this);
         this.options.add(option);

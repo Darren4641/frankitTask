@@ -22,7 +22,7 @@ import java.util.List;
 public class GlobalExceptionHandler {
     private static final ResponseEntity<ExceptionMsg> GENERIC_ERROR = new ResponseEntity<>(
             new ExceptionMsg(ResultCode.ERROR.getMessage(), ResultCode.ERROR.getCode(), false, List.of()),
-            HttpStatus.INTERNAL_SERVER_ERROR
+            HttpStatus.BAD_REQUEST
     );
 
     @ExceptionHandler(ApiErrorException.class)

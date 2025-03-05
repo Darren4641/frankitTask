@@ -1,10 +1,10 @@
-package shop.frankit.domain.product.dto.registration.request;
+package shop.frankit.domain.product.dto.product.registration.request;
 
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import shop.frankit.domain.product.dto.registration.service.ProductRegistrationSvcReqDto;
+import shop.frankit.domain.product.dto.product.registration.service.ProductRegistrationSvcReqDto;
 
 @Getter
 @NoArgsConstructor

@@ -1,4 +1,4 @@
-package shop.frankit.domain.product.dto.registration.request;
+package shop.frankit.domain.product.dto.product.registration.request;
 
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;

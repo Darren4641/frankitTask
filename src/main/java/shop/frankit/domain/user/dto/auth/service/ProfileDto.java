@@ -7,27 +7,24 @@ import shop.frankit.common.security.dto.RoleType;
 import shop.frankit.domain.user.entity.User;
 import shop.frankit.domain.user.entity.UserRole;
 
-import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class SignupSvcReqDto {
+public class ProfileDto {
     private String email;
-    private String encPassword;
     private Set<RoleType> roles;
 
 
-    public User toEntity() {
-        User newUser = new User(email, encPassword, new HashSet<>());
 
-        Set<UserRole> userRoles = roles.stream()
-                .map(role -> new UserRole(newUser, role))
+    public static ProfileDto fromEntity(User user) {
+
+        var roles = user.getRoles().stream()
+                .map(UserRole::getRole)
                 .collect(Collectors.toSet());
 
-        newUser.setRole(userRoles);
-        return newUser;
+        return new ProfileDto(user.getEmail(), roles);
     }
 }

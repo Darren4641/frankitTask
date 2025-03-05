@@ -18,7 +18,7 @@ public class UserController {
     @GetMapping("/profile")
     @SecurityRequirement(name = "bearerAuth")
     public BaseResponse<?> profile() {
-        return new BaseResponse<>(authService.authenticate());
+        return new BaseResponse<>(authService.getUserProfile());
     }
 
 }

@@ -1,9 +1,9 @@
-package shop.frankit.domain.product.dto.registration.response;
+package shop.frankit.domain.product.dto.product.registration.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import shop.frankit.domain.product.dto.registration.service.ProductRegistrationSvcResDto;
+import shop.frankit.domain.product.dto.product.registration.service.ProductRegistrationSvcResDto;
 
 @Getter
 @NoArgsConstructor
