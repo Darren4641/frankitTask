@@ -44,7 +44,7 @@ public class AuthServiceImpl implements AuthService {
         UserPrincipal principal = (UserPrincipal) authentication.getPrincipal();
 
         User userEntity = userRepository.findByEmailDsl(principal.getUsername())
-                .orElseThrow(() -> new ApiErrorException(ResultCode.ALREADY_SIGNUP));
+                .orElseThrow(() -> new ApiErrorException(ResultCode.USER_NOT_FOUND));
 
         ProfileDto profileDto = ProfileDto.fromEntity(userEntity);
 
@@ -61,7 +61,7 @@ public class AuthServiceImpl implements AuthService {
         UserPrincipal principal = (UserPrincipal) authentication.getPrincipal();
 
         User userEntity = userRepository.findByEmailDsl(principal.getUsername())
-                .orElseThrow(() -> new ApiErrorException(ResultCode.ALREADY_SIGNUP));
+                .orElseThrow(() -> new ApiErrorException(ResultCode.USER_NOT_FOUND));
 
         return ProfileDto.fromEntity(userEntity);
     }
@@ -72,7 +72,7 @@ public class AuthServiceImpl implements AuthService {
         UserPrincipal principal = (UserPrincipal) authentication.getPrincipal();
 
         return userRepository.findByEmailDsl(principal.getUsername())
-                .orElseThrow(() -> new ApiErrorException(ResultCode.ALREADY_SIGNUP));
+                .orElseThrow(() -> new ApiErrorException(ResultCode.USER_NOT_FOUND));
     }
 
     private Authentication authenticateUser(String email, String password) {

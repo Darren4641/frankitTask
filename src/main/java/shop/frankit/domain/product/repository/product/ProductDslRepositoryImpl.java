@@ -1,4 +1,4 @@
-package shop.frankit.domain.product.repository;
+package shop.frankit.domain.product.repository.product;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;

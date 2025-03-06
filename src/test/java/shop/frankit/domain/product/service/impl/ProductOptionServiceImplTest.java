@@ -7,10 +7,10 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import shop.frankit.domain.product.dto.OptionType;
-import shop.frankit.domain.product.dto.productoption.service.ProductOptionRegistrationSvcReqDto;
-import shop.frankit.domain.product.dto.productoption.service.ProductOptionRegistrationSvcResDto;
+import shop.frankit.domain.product.dto.productoption.registration.service.ProductOptionInputRegistrationSvcReqDto;
+import shop.frankit.domain.product.dto.productoption.registration.service.ProductOptionInputRegistrationSvcResDto;
 import shop.frankit.domain.product.entity.Product;
-import shop.frankit.domain.product.repository.ProductRepository;
+import shop.frankit.domain.product.repository.product.ProductRepository;
 import shop.frankit.domain.user.TestUserUtil;
 import shop.frankit.domain.user.entity.User;
 
@@ -35,7 +35,7 @@ class ProductOptionServiceImplTest {
         User authUser = TestUserUtil.getAuthUser();
         Product productEntity = new Product(1L, "test", "test", 1000D, 500D);
         productEntity.setUser(authUser);
-        ProductOptionRegistrationSvcReqDto optionRequest = new ProductOptionRegistrationSvcReqDto(productEntity.getId(), "op1", OptionType.INPUT, 100D);
+        ProductOptionInputRegistrationSvcReqDto optionRequest = new ProductOptionInputRegistrationSvcReqDto(productEntity.getId(), "op1", OptionType.INPUT, 100D);
 
         given(productRepository.findByIdDsl(authUser.getId(), productEntity.getId()))
                 .willReturn(Optional.of(productEntity));
@@ -44,7 +44,7 @@ class ProductOptionServiceImplTest {
                 .willReturn(2L);  // 현재 옵션이 2개 있다고 가정
 
         // when
-        ProductOptionRegistrationSvcResDto response = productOptionService.addOptionToProduct(authUser, optionRequest);
+        ProductOptionInputRegistrationSvcResDto response = productOptionService.addInputOptionToProduct(authUser, optionRequest);
 
         // then
         assertThat(response).isNotNull();

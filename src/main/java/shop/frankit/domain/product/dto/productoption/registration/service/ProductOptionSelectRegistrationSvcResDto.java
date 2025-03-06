@@ -1,4 +1,4 @@
-package shop.frankit.domain.product.dto.productoption.service;
+package shop.frankit.domain.product.dto.productoption.registration.service;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,14 +9,14 @@ import shop.frankit.domain.product.entity.ProductOption;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class ProductOptionRegistrationSvcResDto {
+public class ProductOptionSelectRegistrationSvcResDto {
     private Long productId;
     private String optionName;
     private OptionType optionType;
     private Double extraPrice;
 
-    public static ProductOptionRegistrationSvcResDto fromEntity(Long productId, ProductOption productOption) {
-        return new ProductOptionRegistrationSvcResDto(
+    public static ProductOptionSelectRegistrationSvcResDto fromEntity(Long productId, ProductOption productOption) {
+        return new ProductOptionSelectRegistrationSvcResDto(
                 productId,
                 productOption.getOptionName(),
                 productOption.getOptionType(),

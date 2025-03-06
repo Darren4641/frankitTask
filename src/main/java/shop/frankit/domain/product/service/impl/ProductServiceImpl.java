@@ -6,7 +6,7 @@ import org.springframework.transaction.annotation.Transactional;
 import shop.frankit.domain.product.dto.product.registration.service.ProductRegistrationSvcReqDto;
 import shop.frankit.domain.product.dto.product.registration.service.ProductRegistrationSvcResDto;
 import shop.frankit.domain.product.entity.Product;
-import shop.frankit.domain.product.repository.ProductRepository;
+import shop.frankit.domain.product.repository.product.ProductRepository;
 import shop.frankit.domain.product.service.ProductService;
 import shop.frankit.domain.user.entity.User;
 

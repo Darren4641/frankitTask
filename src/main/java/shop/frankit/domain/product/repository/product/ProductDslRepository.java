@@ -1,4 +1,4 @@
-package shop.frankit.domain.product.repository;
+package shop.frankit.domain.product.repository.product;
 
 import shop.frankit.domain.product.entity.Product;
 

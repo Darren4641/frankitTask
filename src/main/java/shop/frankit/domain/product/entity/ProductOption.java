@@ -38,8 +38,9 @@ public class ProductOption extends BaseEntity {
 
     private Double extraPrice; // 옵션 추가 금액
 
-    @OneToMany(mappedBy = "productOption", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<ProductOptionValue> optionValues = new ArrayList<>();
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "common_option_id")
+    private CommonOption commonOption;
 
     public ProductOption(String optionName, OptionType optionType, Double extraPrice) {
         this.optionName = optionName;
@@ -47,12 +48,18 @@ public class ProductOption extends BaseEntity {
         this.extraPrice = extraPrice;
     }
 
+    public ProductOption(OptionType optionType, CommonOption commonOption) {
+        this.optionType = optionType;
+        this.commonOption = commonOption;
+    }
+
     protected void setProduct(Product product) {
         this.product = product;
     }
 
-    public void addOptionValue(ProductOptionValue value) {
-        value.setProductOption(this);
-        this.optionValues.add(value);
+    public void setCommonOption(CommonOption commonOption) {
+        this.commonOption = commonOption;
     }
+
+
 }

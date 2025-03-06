@@ -1,26 +1,25 @@
-package shop.frankit.domain.product.dto.productoption.service;
+package shop.frankit.domain.product.dto.productoption.registration.service;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import shop.frankit.domain.product.dto.OptionType;
+import shop.frankit.domain.product.entity.CommonOption;
 import shop.frankit.domain.product.entity.Product;
 import shop.frankit.domain.product.entity.ProductOption;
 
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class ProductOptionRegistrationSvcReqDto {
+public class ProductOptionSelectRegistrationSvcReqDto {
     private Long productId;
-    private String optionName;
+    private Long optionId;
     private OptionType optionType;
-    private Double extraPrice;
 
-    public ProductOption toEntity(Product product) {
+    public ProductOption toEntity(Product product, CommonOption option) {
         ProductOption newProductOption = new ProductOption(
-                optionName,
                 optionType,
-                extraPrice
+                option
         );
         product.addOption(newProductOption);
         return newProductOption;
