@@ -457,5 +457,5 @@ async function deleteProductOption() {
 document.addEventListener("DOMContentLoaded", () => {
     loadProfile();
     loadProducts();
-    //loadCommonOptions();
+    loadCommonOptions();
 });
