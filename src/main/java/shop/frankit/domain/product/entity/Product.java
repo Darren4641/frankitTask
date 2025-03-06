@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 import shop.frankit.domain.common.BaseEntity;
+import shop.frankit.domain.product.dto.product.modify.service.ProductModifySvcReqDto;
 import shop.frankit.domain.user.entity.User;
 
 import java.util.ArrayList;
@@ -59,5 +60,12 @@ public class Product extends BaseEntity {
     public void addOption(ProductOption option) {
         option.setProduct(this);
         this.options.add(option);
+    }
+
+    public void update(ProductModifySvcReqDto productModifySvcReqDto) {
+        this.name = productModifySvcReqDto.getName();
+        this.description = productModifySvcReqDto.getDescription();
+        this.price = productModifySvcReqDto.getPrice();
+        this.deliveryFee = productModifySvcReqDto.getDeliveryFee();
     }
 }

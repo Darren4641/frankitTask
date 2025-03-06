@@ -37,21 +37,21 @@ class ProductOptionServiceImplTest {
         productEntity.setUser(authUser);
         ProductOptionInputRegistrationSvcReqDto optionRequest = new ProductOptionInputRegistrationSvcReqDto(productEntity.getId(), "op1", OptionType.INPUT, 100D);
 
-        given(productRepository.findByIdDsl(authUser.getId(), productEntity.getId()))
+        given(productRepository.findByIdDsl(productEntity.getId()))
                 .willReturn(Optional.of(productEntity));
 
         given(productRepository.countProductOptions(productEntity.getId()))
                 .willReturn(2L);  // 현재 옵션이 2개 있다고 가정
 
         // when
-        ProductOptionInputRegistrationSvcResDto response = productOptionService.addInputOptionToProduct(authUser, optionRequest);
+        ProductOptionInputRegistrationSvcResDto response = productOptionService.addInputOptionToProduct(optionRequest);
 
         // then
         assertThat(response).isNotNull();
         assertThat(response.getProductId()).isEqualTo(productEntity.getId());
         assertThat(response.getOptionName()).isEqualTo(optionRequest.getOptionName());
 
-        verify(productRepository).findByIdDsl(authUser.getId(), productEntity.getId());
+        verify(productRepository).findByIdDsl(productEntity.getId());
         verify(productRepository).countProductOptions(productEntity.getId());
     }
 }
