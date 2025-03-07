@@ -11,11 +11,11 @@ import shop.frankit.domain.product.dto.productoptionvalue.CommonOptionDto;
 
 @Getter
 @Entity
-@Table(name = "`common_option_value`")
 @DynamicUpdate
 @DynamicInsert
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Table(name = "`common_option_value`", indexes = @Index(name = "idx_common_option_value_common_option", columnList = "common_option_id"))
 public class CommonOptionValue {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -93,6 +93,9 @@ class AuthServiceImplTest {
         UserPrincipal mockUserPrincipal = new UserPrincipal(userMock);
 
 
+        given(userRepository.findByEmailDsl(mockUserPrincipal.getUsername()))
+                .willReturn(Optional.of(userMock));
+
         given(authenticationManager.authenticate(any(UsernamePasswordAuthenticationToken.class)))
                 .willReturn(authentication);
 
@@ -121,6 +124,7 @@ class AuthServiceImplTest {
         given(authenticationManager.authenticate(any(UsernamePasswordAuthenticationToken.class)))
                 .willThrow(new BadCredentialsException("Invalid credentials"));
 
+
         // when & then
         assertThatThrownBy(() -> authService.validateCredentials(signinRequest))
                 .isInstanceOf(ApiErrorException.class)
@@ -140,6 +144,10 @@ class AuthServiceImplTest {
         userMock.setRole(Set.of(new UserRole(userMock, RoleType.USER)));
 
         UserPrincipal mockUserPrincipal = new UserPrincipal(userMock);
+
+
+        given(userRepository.findByEmailDsl(mockUserPrincipal.getUsername()))
+                .willReturn(Optional.of(userMock));
 
         given(securityContext.getAuthentication()).willReturn(authentication);
         given(authentication.getPrincipal()).willReturn((UserPrincipal) mockUserPrincipal);
